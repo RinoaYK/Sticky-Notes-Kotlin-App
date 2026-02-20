@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="sticky_yellow">#E9C94A</color>
+    <color name="sticky_yellow_variant">#D4B23F</color>
+    <color name="sticky_text">#2B1E18</color>
+    <color name="sticky_background_light">#FFFDF6</color>
+
+    <color name="sticky_nav_background">#FFFFFF</color>
+    <color name="sticky_nav_selected">#E9C94A</color>
+    <color name="sticky_nav_unselected">#9E9E9E</color>
+
+    <color name="sticky_teal">#7BD1C4</color>
+    <color name="sticky_coral">#FE9882</color>
+    <color name="sticky_unselected">#C6C6C6</color>
+
+    <color name="sticky_yellow_ripple">#4DE9C94A</color>
+
+</resources>

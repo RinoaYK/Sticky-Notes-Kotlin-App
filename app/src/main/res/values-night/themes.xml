@@ -1,0 +1,21 @@
+<resources>
+
+    <style name="Theme.StickyNotes" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        <!-- Cores principais -->
+        <item name="colorPrimary">#D4B84F</item>
+        <item name="colorPrimaryVariant">#B89E3F</item>
+        <item name="colorOnPrimary">#1E1A18</item>
+
+        <item name="colorSecondary">#63C6C4</item>
+        <item name="colorOnSecondary">#1A1A1A</item>
+
+        <!-- Background -->
+        <item name="android:windowBackground">#1E1A18</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">#1E1A18</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+    </style>
+</resources>

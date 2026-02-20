@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sticky_yellow">#D4B84F</color>
+    <color name="sticky_yellow_variant">#B89E3F</color>
+    <color name="sticky_text">#FFF8E1</color>
+    <color name="sticky_background_light">#1E1A18</color>
+
+    <color name="sticky_nav_background">#2A2522</color>
+    <color name="sticky_nav_selected">#D4B84F</color>
+    <color name="sticky_nav_unselected">#B0A9A4</color>
+
+</resources>

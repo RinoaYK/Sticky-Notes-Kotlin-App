@@ -1,0 +1,25 @@
+<resources>
+
+    <style name="Theme.StickyNotes" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        <!-- Amarelo mais fechado -->
+        <item name="colorPrimary">#E9C94A</item>
+        <item name="colorPrimaryVariant">#D4B23F</item>
+
+        <!-- Texto BEM escuro -->
+        <item name="colorOnPrimary">#2B1E18</item>
+
+        <!-- Secundária mais suave -->
+        <item name="colorSecondary">#5FB8B6</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+
+        <!-- Fundo mais neutro -->
+        <item name="android:windowBackground">#FFFDF6</item>
+
+        <item name="android:statusBarColor">#D4B23F</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="colorControlHighlight">#4DE9C94A</item>
+
+    </style>
+</resources>

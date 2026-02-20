@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sticky_background_light"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Pré-visualização do Widget"
+            android:textColor="@color/sticky_text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Preview Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_preview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="@color/sticky_yellow"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp">
+
+            <LinearLayout
+                android:id="@+id/widget_preview_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/widget_preview_image"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_design" />
+
+                <TextView
+                    android:id="@+id/widget_preview_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="6"
+                    android:padding="8dp"
+                    android:text="Seu texto aqui agora respeita o espaço da imagem e quebra linha sozinho!"
+                    android:textColor="@color/sticky_text"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Seção Tamanho -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Tamanho"
+            android:textColor="@color/sticky_text"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_switch_layout"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Posição"
+                android:textColor="@color/sticky_text"
+                app:icon="@drawable/ic_sync_animated"
+                app:iconPadding="6dp"
+                app:iconSize="20dp"
+                app:iconTint="@color/sticky_text" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupSize"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                app:chipSpacingHorizontal="12dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tag_4x1"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:minWidth="80dp"
+                    android:text="4x1"
+                    android:textAlignment="center"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_4x1_selector" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tag_4x2"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:minWidth="80dp"
+                    android:text="4x2"
+                    android:textAlignment="center"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_4x2_selector" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+
+        <!-- Seção Personalização -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Personalização"
+            android:textColor="@color/sticky_text"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_change_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/sticky_yellow"
+            android:text="Escolher Sticker"
+            android:textColor="@color/sticky_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_change_bg"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mudar Cor de Fundo"
+            android:textColor="@color/sticky_text"
+            app:strokeColor="@color/sticky_yellow_variant" />
+
+    </LinearLayout>
+</ScrollView>
