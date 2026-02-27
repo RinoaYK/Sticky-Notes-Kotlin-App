@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -40,7 +41,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.util.Locale
-import androidx.core.graphics.toColorInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -84,6 +84,16 @@ class MainActivity : AppCompatActivity() {
         val tag4x2 = view.findViewById<Chip>(R.id.tag_4x2)
         val btnInverter = view.findViewById<MaterialButton>(R.id.btn_switch_layout)
 
+        val btnTextPlus = view.findViewById<ImageView>(R.id.btn_text_plus)
+        val btnTextMinus = view.findViewById<ImageView>(R.id.btn_text_minus)
+        val btnStickerPlus = view.findViewById<ImageView>(R.id.btn_sticker_plus)
+        val btnStickerMinus = view.findViewById<ImageView>(R.id.btn_sticker_minus)
+
+        btnTextPlus.setOnClickListener { viewModel.updateFontSize(true); updateWidget() }
+        btnTextMinus.setOnClickListener { viewModel.updateFontSize(false); updateWidget() }
+        btnStickerPlus.setOnClickListener { viewModel.updateStickerSize(true); updateWidget() }
+        btnStickerMinus.setOnClickListener { viewModel.updateStickerSize(false); updateWidget() }
+
         listOf(tag4x1, tag4x2).forEach { chip ->
             chip.setOnCheckedChangeListener { buttonView, isChecked ->
                 buttonView.setTypeface(null, if (isChecked) Typeface.BOLD else Typeface.NORMAL)
@@ -92,11 +102,20 @@ class MainActivity : AppCompatActivity() {
 
         cardPreview.setOnClickListener { openInputSheet() }
 
+        viewModel.showLimitToast.observe(this) { message ->
+            message?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.toastShown()
+            }
+        }
+
+
         viewModel.widgetState.observe(this) { state ->
             previewBg.setBackgroundColor(state.bgColor)
 
             previewText.text = state.text
             previewText.setTextColor(state.textColor)
+            previewText.textSize = state.fontSize
 
             state.imageUri?.let {
                 previewImage.setImageURI(it.toUri())
@@ -105,9 +124,23 @@ class MainActivity : AppCompatActivity() {
 
             val is4x1 = state.size == "4x1"
 
+            val maxSticker = if (state.size == "4x1") 80 else 160
+            val minSticker = 40
+
+            view.findViewById<ImageView>(R.id.btn_sticker_plus).alpha =
+                if (state.stickerSize >= maxSticker) 0.3f else 1.0f
+
+            view.findViewById<ImageView>(R.id.btn_sticker_minus).alpha =
+                if (state.stickerSize <= minSticker) 0.3f else 1.0f
+
+            view.findViewById<ImageView>(R.id.btn_text_plus).alpha =
+                if (state.fontSize >= 25f) 0.3f else 1.0f
+
+            view.findViewById<ImageView>(R.id.btn_text_minus).alpha =
+                if (state.fontSize <= 8f) 0.3f else 1.0f
+
             val imgParams = previewImage.layoutParams as LinearLayout.LayoutParams
-            val imgSize = if (is4x1) 120 else 100
-            val imgPx = (imgSize * resources.displayMetrics.density).toInt()
+            val imgPx = (state.stickerSize * resources.displayMetrics.density).toInt()
             imgParams.width = imgPx
             imgParams.height = imgPx
             previewImage.layoutParams = imgParams
