@@ -34,7 +34,7 @@ import com.example.stickynotes.ui.widget.StickerAdapter
 import com.example.stickynotes.ui.widget.WidgetAlignment
 import com.example.stickynotes.ui.widget.WidgetViewModel
 import com.example.stickynotes.widget.WidgetProvider4x1
-import com.example.stickynotes.widget.WidgetProvider4x2
+import com.example.stickynotes.widget.WidgetProvider5x2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         val previewText = view.findViewById<TextView>(R.id.widget_preview_text)
         val previewImage = view.findViewById<ImageView>(R.id.widget_preview_image)
         val tag4x1 = view.findViewById<Chip>(R.id.tag_4x1)
-        val tag4x2 = view.findViewById<Chip>(R.id.tag_4x2)
+        val tag5x2 = view.findViewById<Chip>(R.id.tag_5x2)
         val btnInverter = view.findViewById<MaterialButton>(R.id.btn_switch_layout)
 
         val btnTextPlus = view.findViewById<ImageView>(R.id.btn_text_plus)
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         btnStickerPlus.setOnClickListener { viewModel.updateStickerSize(true); updateWidget() }
         btnStickerMinus.setOnClickListener { viewModel.updateStickerSize(false); updateWidget() }
 
-        listOf(tag4x1, tag4x2).forEach { chip ->
+        listOf(tag4x1, tag5x2).forEach { chip ->
             chip.setOnCheckedChangeListener { buttonView, isChecked ->
                 buttonView.setTypeface(null, if (isChecked) Typeface.BOLD else Typeface.NORMAL)
             }
@@ -151,11 +151,21 @@ class MainActivity : AppCompatActivity() {
                 previewBg.layoutDirection = View.LAYOUT_DIRECTION_RTL
             }
 
-            cardPreview.layoutParams.height = if (is4x1) 350 else 600
+            val displayMetrics = resources.displayMetrics
+            val screenWidth = displayMetrics.widthPixels
+
+            if (is4x1) {
+                cardPreview.layoutParams.width = (screenWidth * 0.85).toInt()
+                cardPreview.layoutParams.height = 290
+            } else {
+                cardPreview.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+                cardPreview.layoutParams.height = 600
+            }
+
             cardPreview.requestLayout()
 
             tag4x1.isChecked = is4x1
-            tag4x2.isChecked = !is4x1
+            tag5x2.isChecked = !is4x1
         }
 
         btnInverter.setOnClickListener {
@@ -192,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             when (checkedIds.firstOrNull()) {
                 R.id.tag_4x1 -> viewModel.updateSize("4x1")
-                R.id.tag_4x2 -> viewModel.updateSize("4x2")
+                R.id.tag_5x2 -> viewModel.updateSize("5x2")
             }
             updateWidget()
         }
@@ -251,8 +261,8 @@ class MainActivity : AppCompatActivity() {
         view.findViewById<View>(R.id.card_widget_4x1).setOnClickListener {
             confirmWidgetSelection("4x1", WidgetProvider4x1::class.java, alert)
         }
-        view.findViewById<View>(R.id.card_widget_4x2).setOnClickListener {
-            confirmWidgetSelection("4x2", WidgetProvider4x2::class.java, alert)
+        view.findViewById<View>(R.id.card_widget_5x2).setOnClickListener {
+            confirmWidgetSelection("5x2", WidgetProvider5x2::class.java, alert)
         }
         alert.show()
     }
@@ -296,7 +306,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateWidget() {
-        val providers = listOf(WidgetProvider4x1::class.java, WidgetProvider4x2::class.java)
+        val providers = listOf(WidgetProvider4x1::class.java, WidgetProvider5x2::class.java)
         providers.forEach { providerClass ->
             val intent = Intent(this, providerClass).apply {
                 action = AppWidgetManager.ACTION_APPWIDGET_UPDATE

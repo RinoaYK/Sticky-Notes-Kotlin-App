@@ -32,15 +32,15 @@
                 android:resource="@xml/widget_info_4x1" />
         </receiver>
 
-        <receiver android:name=".widget.WidgetProvider4x2"
-            android:label="Sticky Note 4x2"
+        <receiver android:name=".widget.WidgetProvider5x2"
+            android:label="Sticky Note 5x2"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info_4x2" />
+                android:resource="@xml/widget_info_5x2" />
         </receiver>
 
     </application>
