@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Título -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,12 +21,13 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Preview Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_preview"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginBottom="24dp"
+            android:clickable="true"
+            android:focusable="true"
             app:cardBackgroundColor="@color/sticky_yellow"
             app:cardCornerRadius="20dp"
             app:cardElevation="6dp">
@@ -63,7 +63,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Seção Tamanho -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,7 +127,6 @@
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
-        <!-- Seção Personalização -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -151,7 +149,17 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:text="Mudar Cor de Fundo"
+            android:textColor="@color/sticky_text"
+            app:strokeColor="@color/sticky_yellow_variant" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_change_text_color"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mudar Cor do Texto"
             android:textColor="@color/sticky_text"
             app:strokeColor="@color/sticky_yellow_variant" />
 

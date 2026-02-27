@@ -16,6 +16,8 @@ import android.widget.RemoteViews
 import androidx.core.graphics.scale
 import com.example.stickynotes.R
 import com.example.stickynotes.ui.main.MainActivity
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 
 open class MyWidgetProvider : AppWidgetProvider() {
 
@@ -34,12 +36,17 @@ open class MyWidgetProvider : AppWidgetProvider() {
             val userText = prefs.getString("user_text", "Minha Nota")
             val bgColor = prefs.getInt("widget_bg_color", Color.WHITE)
 
+            val defaultTextColor = ContextCompat.getColor(context, R.color.sticky_text)
+            val textColor = prefs.getInt("widget_text_color", defaultTextColor)
+
             views.setTextViewText(R.id.widget_text_display, userText)
             views.setInt(R.id.widget_background_display, "setBackgroundColor", bgColor)
 
+            views.setTextColor(R.id.widget_text_display, textColor)
+
             prefs.getString("widget_image_uri", null)?.let { uriStr ->
                 try {
-                    val bitmap = uriToBitmap(context, Uri.parse(uriStr))
+                    val bitmap = uriToBitmap(context, uriStr.toUri())
                     bitmap?.let {
                         views.setImageViewBitmap(R.id.widget_image_display, it)
                     }

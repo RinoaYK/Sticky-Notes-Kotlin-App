@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.GridLayoutManager
@@ -39,6 +40,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.util.Locale
+import androidx.core.graphics.toColorInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -88,9 +90,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        cardPreview.setOnClickListener { openInputSheet() }
+
         viewModel.widgetState.observe(this) { state ->
             previewBg.setBackgroundColor(state.bgColor)
+
             previewText.text = state.text
+            previewText.setTextColor(state.textColor)
+
             state.imageUri?.let {
                 previewImage.setImageURI(it.toUri())
                 previewImage.alpha = 1.0f
@@ -164,6 +171,10 @@ class MainActivity : AppCompatActivity() {
         view.findViewById<Button>(R.id.btn_change_bg)
             .setOnClickListener { openColorPicker(previewBg) }
 
+        view.findViewById<Button>(R.id.btn_change_text_color).setOnClickListener {
+            openTextColorPicker()
+        }
+
         binding.fragmentContainer.addView(view)
     }
 
@@ -230,6 +241,21 @@ class MainActivity : AppCompatActivity() {
             override fun onCancel(dialog: AmbilWarnaDialog?) {}
             override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
                 prefs.edit { putInt("widget_bg_color", color) }
+                viewModel.loadData()
+                updateWidget()
+            }
+        }).show()
+    }
+
+    private fun openTextColorPicker() {
+        val prefs = getSharedPreferences("WidgetPrefs", MODE_PRIVATE)
+        val defaultTextColor = ContextCompat.getColor(this, R.color.sticky_text)
+        val initialColor = prefs.getInt("widget_text_color", defaultTextColor)
+
+        AmbilWarnaDialog(this, initialColor, object : AmbilWarnaDialog.OnAmbilWarnaListener {
+            override fun onCancel(dialog: AmbilWarnaDialog?) {}
+            override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                prefs.edit { putInt("widget_text_color", color) }
                 viewModel.loadData()
                 updateWidget()
             }
