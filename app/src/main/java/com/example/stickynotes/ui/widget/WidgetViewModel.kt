@@ -3,10 +3,12 @@ package com.example.stickynotes.ui.widget
 import android.app.Application
 import android.content.Context
 import android.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.stickynotes.R
 
 class WidgetViewModel(application: Application) : AndroidViewModel(application) {
     private val prefs = application.getSharedPreferences("WidgetPrefs", Context.MODE_PRIVATE)
@@ -17,6 +19,7 @@ class WidgetViewModel(application: Application) : AndroidViewModel(application) 
     data class WidgetData(
         val text: String,
         val bgColor: Int,
+        val textColor: Int,
         val imageUri: String?,
         val size: String,
         val textAlignment: WidgetAlignment,
@@ -29,11 +32,13 @@ class WidgetViewModel(application: Application) : AndroidViewModel(application) 
 
     fun loadData() {
         val size = prefs.getString("widget_size", "4x1") ?: "4x1"
+        val defaultTextColor = ContextCompat.getColor(getApplication(), R.color.sticky_text)
 
         try {
             _widgetState.value = WidgetData(
                 text = prefs.getString("user_text", "Seu texto") ?: "",
                 bgColor = prefs.getInt("widget_bg_color", Color.WHITE),
+                textColor = prefs.getInt("widget_text_color", defaultTextColor),
                 imageUri = prefs.getString("widget_image_uri", null),
                 size = size,
                 textAlignment = WidgetAlignment.valueOf(
@@ -46,6 +51,7 @@ class WidgetViewModel(application: Application) : AndroidViewModel(application) 
         } catch (e: Exception) {
             _widgetState.value = WidgetData(
                 text = prefs.getString("user_text", "Seu texto") ?: "",
+                textColor = prefs.getInt("widget_text_color", defaultTextColor),
                 bgColor = prefs.getInt("widget_bg_color", Color.WHITE),
                 imageUri = prefs.getString("widget_image_uri", null),
                 size = size,
