@@ -28,6 +28,7 @@
             android:layout_marginBottom="24dp"
             android:clickable="true"
             android:focusable="true"
+            android:layout_gravity="center"
             app:cardBackgroundColor="@color/sticky_yellow"
             app:cardCornerRadius="20dp"
             app:cardElevation="6dp">
@@ -38,7 +39,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="12dp">
+                android:padding="8dp">
 
                 <ImageView
                     android:id="@+id/widget_preview_image"
@@ -108,13 +109,13 @@
                     app:chipBackgroundColor="@color/chip_4x1_selector" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/tag_4x2"
+                    android:id="@+id/tag_5x2"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4x2"
+                    android:text="5x2"
                     android:textColor="@color/chip_text_color"
-                    app:chipBackgroundColor="@color/chip_4x2_selector" />
+                    app:chipBackgroundColor="@color/chip_5x2_selector" />
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 

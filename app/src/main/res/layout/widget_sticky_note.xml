@@ -3,7 +3,7 @@
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    >
 
     <LinearLayout
         android:id="@+id/widget_background_display"
@@ -13,7 +13,8 @@
         android:background="@drawable/widget_background_shape"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="12dp"
+        >
 
         <ImageView
             android:id="@+id/widget_image_display"
