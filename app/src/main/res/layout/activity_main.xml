@@ -25,9 +25,8 @@
         android:paddingBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- ITEM -->
         <LinearLayout
-            android:id="@+id/btn_design"
+            android:id="@+id/btn_home"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -38,16 +37,16 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/img_design"
+                android:id="@+id/img_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_design"
+                android:src="@drawable/ic_home"
                 app:tint="@color/nav_item_selector" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Design"
+                android:text="Home"
                 android:textColor="@color/nav_item_selector"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -79,7 +78,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/btn_home"
+            android:id="@+id/btn_design"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -90,16 +89,16 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/img_home"
+                android:id="@+id/img_design"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home"
+                android:src="@drawable/ic_design"
                 app:tint="@color/nav_item_selector" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home"
+                android:text="Design"
                 android:textColor="@color/nav_item_selector"
                 android:textSize="12sp" />
         </LinearLayout>
