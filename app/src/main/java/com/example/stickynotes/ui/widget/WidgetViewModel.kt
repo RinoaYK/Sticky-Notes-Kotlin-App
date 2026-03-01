@@ -1,155 +1,147 @@
 package com.example.stickynotes.ui.widget
 
-import android.app.Application
-import android.content.Context
-import android.graphics.Color
-import androidx.core.content.ContextCompat
-import androidx.core.content.edit
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.stickynotes.R
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.stickynotes.domain.model.WidgetNote
+import com.example.stickynotes.domain.repository.WidgetRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WidgetViewModel(application: Application) : AndroidViewModel(application) {
-    private val prefs = application.getSharedPreferences("WidgetPrefs", Context.MODE_PRIVATE)
+@HiltViewModel
+class WidgetViewModel @Inject constructor(
+    private val repository: WidgetRepository
+) : ViewModel() {
 
-    private val _widgetState = MutableLiveData<WidgetData>()
-    val widgetState: LiveData<WidgetData> = _widgetState
+    private val _widgetState = MutableLiveData<WidgetNote>()
+    val widgetState: LiveData<WidgetNote> = _widgetState
 
     private val _showLimitToast = MutableLiveData<String?>()
     val showLimitToast: LiveData<String?> = _showLimitToast
 
-    data class WidgetData(
-        val text: String,
-        val bgColor: Int,
-        val textColor: Int,
-        val fontSize: Float,
-        val stickerSize: Int,
-        val imageUri: String?,
-        val size: String,
-        val textAlignment: WidgetAlignment,
-        val imageAlignment: WidgetAlignment
+    private val _allWidgets = MutableLiveData<List<WidgetNote>>()
+    val allWidgets: LiveData<List<WidgetNote>> = _allWidgets
+
+    private var activeId: Int = -1
+
+    fun loadData(widgetId: Int) {
+        activeId = widgetId
+        viewModelScope.launch {
+            val note = repository.getWidgetById(widgetId)
+            if (note != null) {
+                _widgetState.value = note
+            } else {
+                val defaultNote = createDefaultNote(widgetId)
+                repository.saveWidget(defaultNote)
+                _widgetState.value = defaultNote
+            }
+        }
+    }
+    private fun createDefaultNote(id: Int) = WidgetNote(
+        id = id,
+        text = "Sua nota...",
+        bgColor = -1,
+        textColor = -16777216,
+        fontSize = 13f,
+        stickerSize = 80,
+        imageUri = null,
+        layoutSize = "4x1",
+        imageAlignment = "RIGHT_CENTER"
     )
 
-    init {
-        loadData()
+    fun updateText(newText: String) {
+        val current = _widgetState.value ?: return
+        saveAndRefresh(current.copy(text = newText))
     }
 
-    fun loadData() {
-        val size = prefs.getString("widget_size", "4x1") ?: "4x1"
-        var stickerSize = prefs.getInt("widget_sticker_size", 110)
-        val defaultTextColor = ContextCompat.getColor(getApplication(), R.color.sticky_text)
-        val fontSize = prefs.getFloat("widget_font_size", 13f)
-        if (size == "4x1" && stickerSize > 80) {
-            stickerSize = 80
-        }
+    fun updateColors(bgColor: Int? = null, textColor: Int? = null) {
+        val current = _widgetState.value ?: return
+        saveAndRefresh(current.copy(
+            bgColor = bgColor ?: current.bgColor,
+            textColor = textColor ?: current.textColor
+        ))
+    }
 
-        try {
-            _widgetState.value = WidgetData(
-                text = prefs.getString("user_text", "Seu texto") ?: "",
-                bgColor = prefs.getInt("widget_bg_color", Color.WHITE),
-                textColor = prefs.getInt("widget_text_color", defaultTextColor),
-                fontSize = fontSize,
-                stickerSize = stickerSize,
-                imageUri = prefs.getString("widget_image_uri", null),
-                size = size,
-                textAlignment = WidgetAlignment.valueOf(
-                    prefs.getString("txt_align_$size", "LEFT_CENTER")!!
-                ),
-                imageAlignment = WidgetAlignment.valueOf(
-                    prefs.getString("img_align_$size", "RIGHT_CENTER")!!
-                )
-            )
-        } catch (e: Exception) {
-            _widgetState.value = WidgetData(
-                text = prefs.getString("user_text", "Seu texto") ?: "",
-                textColor = prefs.getInt("widget_text_color", defaultTextColor),
-                fontSize = fontSize,
-                stickerSize = stickerSize,
-                bgColor = prefs.getInt("widget_bg_color", Color.WHITE),
-                imageUri = prefs.getString("widget_image_uri", null),
-                size = size,
-                textAlignment = WidgetAlignment.LEFT_CENTER,
-                imageAlignment = WidgetAlignment.RIGHT_CENTER
-            )
-        }
+    fun updateImage(uri: String) {
+        val current = _widgetState.value ?: return
+        saveAndRefresh(current.copy(imageUri = uri))
     }
 
     fun updateFontSize(increment: Boolean) {
-        val current = _widgetState.value?.fontSize ?: 13f
-        val next = if (increment) current + 1f else current - 1f
-        if (next in 8f..30f) {
-            prefs.edit { putFloat("widget_font_size", next) }
-            loadData()
-        }
-    }
-
-    fun toastShown() {
-        _showLimitToast.value = null
-    }
-
-    fun updateStickerSize(increment: Boolean) {
-        val currentState = _widgetState.value ?: return
-        val currentSize = currentState.stickerSize
-        val widgetLayout = currentState.size
-
-        val minLimit = 40
-        val maxLimit = if (widgetLayout == "4x1") 80 else 160
+        val current = _widgetState.value ?: return
+        val minFontSize = 8f
+        val maxFontSize = 30f
 
         if (increment) {
-            val nextSize = currentSize + 10
-            if (nextSize <= maxLimit) {
-                prefs.edit { putInt("widget_sticker_size", nextSize) }
-                loadData()
+            if (current.fontSize < maxFontSize) {
+                saveAndRefresh(current.copy(fontSize = current.fontSize + 1f))
             } else {
-                _showLimitToast.value = "Limite máximo atingido para o layout $widgetLayout"
+                _showLimitToast.value = "Tamanho máximo da fonte atingido"
             }
         } else {
-            val nextSize = currentSize - 10
-            if (nextSize >= minLimit) {
-                prefs.edit { putInt("widget_sticker_size", nextSize) }
-                loadData()
+            if (current.fontSize > minFontSize) {
+                saveAndRefresh(current.copy(fontSize = current.fontSize - 1f))
             } else {
-                _showLimitToast.value = "Tamanho mínimo atingido"
+                _showLimitToast.value = "Tamanho mínimo da fonte atingido"
+            }
+        }
+    }
+    fun updateStickerSize(increment: Boolean) {
+        val current = _widgetState.value ?: return
+        val minStickerSize = 40
+        val maxLimit = if (current.layoutSize == "4x1") 80 else 160
+
+        if (increment) {
+            if (current.stickerSize < maxLimit) {
+                saveAndRefresh(current.copy(stickerSize = current.stickerSize + 10))
+            } else {
+                _showLimitToast.value = "O Sticker não pode ser maior neste layout"
+            }
+        } else {
+            if (current.stickerSize > minStickerSize) {
+                saveAndRefresh(current.copy(stickerSize = current.stickerSize - 10))
+            } else {
+                _showLimitToast.value = "Tamanho mínimo do sticker atingido"
             }
         }
     }
 
     fun updateSize(newSize: String) {
-        prefs.edit { putString("widget_size", newSize) }
-        loadData()
+        val current = _widgetState.value ?: return
+        saveAndRefresh(current.copy(layoutSize = newSize))
     }
 
     fun toggleAlignments() {
-        val currentState = _widgetState.value ?: return
-        val size = currentState.size
-
-        val (nextImg, nextTxt) = if (size == "4x1") {
-            if (currentState.imageAlignment == WidgetAlignment.RIGHT_CENTER) {
-                Pair(WidgetAlignment.LEFT_CENTER, WidgetAlignment.RIGHT_CENTER)
-            } else {
-                Pair(WidgetAlignment.RIGHT_CENTER, WidgetAlignment.LEFT_CENTER)
-            }
+        val current = _widgetState.value ?: return
+        val nextImg = if (current.layoutSize == "4x1") {
+            if (current.imageAlignment == "RIGHT_CENTER") "LEFT_CENTER" else "RIGHT_CENTER"
         } else {
-            when (currentState.imageAlignment) {
-                WidgetAlignment.RIGHT_CENTER -> Pair(
-                    WidgetAlignment.LEFT_CENTER,
-                    WidgetAlignment.RIGHT_CENTER
-                )
-
-                WidgetAlignment.LEFT_CENTER -> Pair(
-                    WidgetAlignment.TOP_CENTER,
-                    WidgetAlignment.BOTTOM_CENTER
-                )
-
-                else -> Pair(WidgetAlignment.RIGHT_CENTER, WidgetAlignment.LEFT_CENTER)
-            }
+            if (current.imageAlignment == "RIGHT_CENTER") "LEFT_CENTER" else "RIGHT_CENTER"
         }
+        saveAndRefresh(current.copy(imageAlignment = nextImg))
+    }
 
-        prefs.edit {
-            putString("img_align_$size", nextImg.name)
-            putString("txt_align_$size", nextTxt.name)
+    private fun saveAndRefresh(updatedNote: WidgetNote) {
+        viewModelScope.launch {
+            repository.saveWidget(updatedNote)
+            _widgetState.value = updatedNote
         }
-        loadData()
+    }
+
+    fun toastShown() { _showLimitToast.value = null }
+
+    fun loadAllWidgets() {
+        viewModelScope.launch {
+            _allWidgets.value = repository.getAllWidgets()
+        }
+    }
+
+    fun deleteWidget(id: Int) {
+        viewModelScope.launch {
+            repository.deleteWidget(id)
+            loadAllWidgets()
+        }
     }
 }

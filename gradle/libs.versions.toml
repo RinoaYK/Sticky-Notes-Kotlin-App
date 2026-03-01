@@ -1,5 +1,4 @@
 [versions]
-agp = "9.0.1"
 ambilwarna = "2.0.1"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -9,6 +8,20 @@ appcompat = "1.7.1"
 material = "1.13.0"
 activity = "1.12.3"
 constraintlayout = "2.2.1"
+
+# Room
+room = "2.6.1"
+
+# Dagger hilt
+dagger-hilt = "2.52"
+
+# Ksp
+agp = "8.13.2"
+kotlin = "2.0.21"
+ksp = "2.0.21-1.0.25"
+
+# Lifecicle
+lifecycle_version = "2.10.0"
 
 [libraries]
 ambilwarna = { module = "com.github.yukuku:ambilwarna", version.ref = "ambilwarna" }
@@ -21,6 +34,21 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
+# Room
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+# Dagger hilt
+dagger-hilt = {module = "com.google.dagger:hilt-android", version.ref = "dagger-hilt"}
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger-hilt"}
+
+# Lifecicle
+lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle_version" }
+lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle_version" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-
+kotlin-android      = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp                 = { id = "com.google.devtools.ksp",      version.ref = "ksp" }
+dagger-hilt =  {id ="com.google.dagger.hilt.android", version.ref = "dagger-hilt"}
