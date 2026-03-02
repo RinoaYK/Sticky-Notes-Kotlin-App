@@ -76,7 +76,8 @@ open class MyWidgetProvider : AppWidgetProvider() {
                     ).toInt()
                     val bmp = uriToBitmap(context, uriStr.toUri(), px)
                     bmp?.let { setImageViewBitmap(R.id.widget_image_display, it) }
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
             }
 
             val intent = Intent(context, MainActivity::class.java).apply {
@@ -93,7 +94,9 @@ open class MyWidgetProvider : AppWidgetProvider() {
 
     private fun createEmptyViews(context: Context, appWidgetId: Int): RemoteViews {
         return RemoteViews(context.packageName, R.layout.widget_sticky_4x1).apply {
-            setTextViewText(R.id.widget_text_display, "Toque para configurar sua nota")
+
+            val emptyMessage = context.getString(R.string.widget_empty_state)
+            setTextViewText(R.id.widget_text_display, emptyMessage)
             setInt(R.id.widget_background_display, "setBackgroundColor", Color.WHITE)
 
             val intent = Intent(context, MainActivity::class.java).apply {
@@ -111,12 +114,19 @@ open class MyWidgetProvider : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
         if (intent?.action == "ACTION_WIDGET_PINNED") {
-            val newWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+            val newWidgetId = intent.getIntExtra(
+                AppWidgetManager.EXTRA_APPWIDGET_ID,
+                AppWidgetManager.INVALID_APPWIDGET_ID
+            )
             val sourceNoteId = intent.getIntExtra("source_note_id", -1)
 
             if (newWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID && sourceNoteId != -1) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val db = Room.databaseBuilder(context.applicationContext, WidgetDatabase::class.java, "sticky_notes.db")
+                    val db = Room.databaseBuilder(
+                        context.applicationContext,
+                        WidgetDatabase::class.java,
+                        "sticky_notes.db"
+                    )
                         .fallbackToDestructiveMigration().build()
                     try {
                         val sourceEntity = db.widgetDao().getWidgetById(sourceNoteId)

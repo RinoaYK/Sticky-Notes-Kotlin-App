@@ -1,49 +1,57 @@
 package com.example.stickynotes.ui.widget
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.stickynotes.R
+import com.example.stickynotes.databinding.ItemStickerBinding
 
 class StickerAdapter(
-    private var items: List<Int>,
     private val thumbIds: List<Int>,
     private val onClick: (Int) -> Unit
-) : RecyclerView.Adapter<StickerAdapter.ViewHolder>() {
+) : ListAdapter<Int, StickerAdapter.ViewHolder>(StickerDiffCallback) {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val image: ImageView = view.findViewById(R.id.item_image)
-    }
+    class ViewHolder(val binding: ItemStickerBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_sticker, parent, false)
-        return ViewHolder(view)
+        val binding = ItemStickerBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val resId = items[position]
-        holder.image.setImageResource(resId)
+        val resId = getItem(position)
+        val context = holder.itemView.context
 
-        val isThumbnail = thumbIds.contains(resId)
+        holder.binding.itemImage.apply {
+            setImageResource(resId)
 
-        if (isThumbnail) {
-            holder.image.scaleType = ImageView.ScaleType.CENTER_CROP
-            holder.image.setPadding(0, 0, 0, 0)
-        } else {
-            holder.image.scaleType = ImageView.ScaleType.CENTER_INSIDE
-            val padding = (12 * holder.itemView.context.resources.displayMetrics.density).toInt()
-            holder.image.setPadding(padding, padding, padding, padding)
+            val isThumbnail = thumbIds.contains(resId)
+
+            if (isThumbnail) {
+                scaleType = ImageView.ScaleType.CENTER_CROP
+                setPadding(0, 0, 0, 0)
+            } else {
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                val padding = (12 * context.resources.displayMetrics.density).toInt()
+                setPadding(padding, padding, padding, padding)
+            }
         }
 
         holder.itemView.setOnClickListener { onClick(resId) }
     }
 
-    override fun getItemCount() = items.size
-
     fun updateData(newItems: List<Int>) {
-        this.items = newItems
-        notifyDataSetChanged()
+        submitList(newItems)
+    }
+
+    object StickerDiffCallback : DiffUtil.ItemCallback<Int>() {
+        override fun areItemsTheSame(oldItem: Int, newItem: Int) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: Int, newItem: Int) = oldItem == newItem
     }
 }

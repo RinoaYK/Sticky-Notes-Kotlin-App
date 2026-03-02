@@ -3,7 +3,7 @@
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:contentDescription="@string/desc_widget_root">
 
     <LinearLayout
         android:id="@+id/widget_background_display"
@@ -11,10 +11,10 @@
         android:layout_height="match_parent"
         android:layout_margin="8dp"
         android:background="@drawable/widget_background_shape"
+        android:baselineAligned="false"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp"
-        >
+        android:padding="12dp">
 
         <ImageView
             android:id="@+id/widget_image_display"
@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/desc_widget_sticker"
             android:scaleType="centerInside"
             android:src="@drawable/ic_design" />
 
@@ -31,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="Sua Nota"
+            android:text="@string/widget_default_text"
             android:textColor="@color/sticky_text"
             android:textSize="14sp" />
 

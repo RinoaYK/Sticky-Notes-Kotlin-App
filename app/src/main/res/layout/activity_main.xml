@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="@color/sticky_nav_background"
+        android:baselineAligned="false"
         android:elevation="16dp"
         android:orientation="horizontal"
         android:paddingTop="8dp"
@@ -40,39 +41,14 @@
                 android:id="@+id/img_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:contentDescription="@string/desc_nav_home"
                 android:src="@drawable/ic_home"
                 app:tint="@color/nav_item_selector" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home"
-                android:textColor="@color/nav_item_selector"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_input"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/nav_item_ripple"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/img_input"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_input"
-                app:tint="@color/nav_item_selector" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Input"
+                android:text="@string/nav_home"
                 android:textColor="@color/nav_item_selector"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -92,13 +68,41 @@
                 android:id="@+id/img_design"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:contentDescription="@string/desc_nav_design"
                 android:src="@drawable/ic_design"
                 app:tint="@color/nav_item_selector" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Design"
+                android:text="@string/nav_design"
+                android:textColor="@color/nav_item_selector"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_input"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/nav_item_ripple"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/img_input"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/desc_nav_input"
+                android:src="@drawable/ic_input"
+                app:tint="@color/nav_item_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_input"
                 android:textColor="@color/nav_item_selector"
                 android:textSize="12sp" />
         </LinearLayout>

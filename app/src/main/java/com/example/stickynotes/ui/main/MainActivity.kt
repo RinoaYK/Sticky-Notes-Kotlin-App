@@ -8,22 +8,17 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RemoteViews
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.stickynotes.R
 import com.example.stickynotes.data.source.StickerDataSource
 import com.example.stickynotes.databinding.ActivityMainBinding
@@ -31,17 +26,14 @@ import com.example.stickynotes.domain.model.WidgetNote
 import com.example.stickynotes.ui.widget.StickerAdapter
 import com.example.stickynotes.ui.widget.WidgetGalleryAdapter
 import com.example.stickynotes.ui.widget.WidgetViewModel
+import com.example.stickynotes.util.WidgetConstants
 import com.example.stickynotes.util.getGreeting
 import com.example.stickynotes.util.uriToBitmap
 import com.example.stickynotes.widget.WidgetProvider4x1
 import com.example.stickynotes.widget.WidgetProvider5x2
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
 import yuku.ambilwarna.AmbilWarnaDialog
-import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -62,28 +54,7 @@ class MainActivity : AppCompatActivity() {
             AppWidgetManager.INVALID_APPWIDGET_ID
         )
 
-        binding.btnHome.setOnClickListener {
-            selectTab(binding.btnHome)
-            showHubScreen()
-        }
-
-        binding.btnDesign.setOnClickListener {
-            if (currentWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                selectTab(binding.btnDesign)
-                showDesignScreen()
-            } else {
-                Toast.makeText(this, "Escolha uma nota na galeria para editar!", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        binding.btnInput.setOnClickListener {
-            if (currentWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                selectTab(binding.btnInput)
-                openInputSheet()
-            } else {
-                Toast.makeText(this, "Selecione um widget primeiro!", Toast.LENGTH_SHORT).show()
-            }
-        }
+        setupNavigation()
 
         if (currentWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
             viewModel.loadData(currentWidgetId)
@@ -95,47 +66,67 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupNavigation() {
+        binding.btnHome.setOnClickListener {
+            selectTab(binding.btnHome)
+            showHubScreen()
+        }
+
+        binding.btnDesign.setOnClickListener {
+            if (currentWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                selectTab(binding.btnDesign)
+                showDesignScreen()
+            } else {
+                Toast.makeText(this, getString(R.string.toast_select_note), Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+        binding.btnInput.setOnClickListener {
+            if (currentWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                selectTab(binding.btnInput)
+                openInputSheet()
+            } else {
+                Toast.makeText(this, getString(R.string.toast_select_widget), Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
     private fun showHubScreen() {
         binding.fragmentContainer.removeAllViews()
-        val hubView = layoutInflater.inflate(R.layout.layout_hub_screen, binding.fragmentContainer, false)
-        binding.fragmentContainer.addView(hubView)
 
-        val tvGreeting = hubView.findViewById<TextView>(R.id.tv_greeting)
-        val btnCreate = hubView.findViewById<Button>(R.id.btn_hub_create_new)
-        val rvGallery = hubView.findViewById<RecyclerView>(R.id.rv_hub_gallery)
-        val tvEmpty = hubView.findViewById<TextView>(R.id.tv_empty_state)
+        val hubBinding = com.example.stickynotes.databinding.LayoutHubScreenBinding.inflate(
+            layoutInflater,
+            binding.fragmentContainer,
+            true
+        )
 
-        tvGreeting.text = getGreeting()
-        btnCreate.setOnClickListener { openFormatDialog() }
+        hubBinding.tvGreeting.text = getGreeting(this)
+        hubBinding.btnHubCreateNew.setOnClickListener { openFormatDialog() }
 
         hubGalleryAdapter = WidgetGalleryAdapter(
-            items = emptyList(),
             onItemClick = { selectedNote ->
                 currentWidgetId = selectedNote.id
                 viewModel.loadData(selectedNote.id)
                 selectTab(binding.btnDesign)
                 showDesignScreen()
             },
-            onDeleteClick = { noteToDelete ->
-                showDeleteConfirmation(noteToDelete)
-            }
+            onDeleteClick = { noteToDelete -> showDeleteConfirmation(noteToDelete) }
         )
 
-        rvGallery.apply {
+        hubBinding.rvHubGallery.apply {
             layoutManager = GridLayoutManager(this@MainActivity, 2)
             adapter = hubGalleryAdapter
         }
 
-        viewModel.allWidgets.removeObservers(this)
-
         viewModel.allWidgets.observe(this) { widgets ->
             if (widgets.isNullOrEmpty()) {
-                tvEmpty.visibility = View.VISIBLE
-                rvGallery.visibility = View.GONE
+                hubBinding.tvEmptyState.visibility = View.VISIBLE
+                hubBinding.rvHubGallery.visibility = View.GONE
             } else {
-                tvEmpty.visibility = View.GONE
-                rvGallery.visibility = View.VISIBLE
-
+                hubBinding.tvEmptyState.visibility = View.GONE
+                hubBinding.rvHubGallery.visibility = View.VISIBLE
                 hubGalleryAdapter.updateData(widgets)
             }
         }
@@ -144,26 +135,44 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDesignScreen() {
         binding.fragmentContainer.removeAllViews()
-        val view = layoutInflater.inflate(R.layout.fragment_design, binding.fragmentContainer, false)
+        val designBinding = com.example.stickynotes.databinding.FragmentDesignBinding.inflate(
+            layoutInflater,
+            binding.fragmentContainer,
+            true
+        )
 
-        val cardPreview = view.findViewById<CardView>(R.id.card_preview)
-        val previewBg = view.findViewById<View>(R.id.widget_preview_background)
-        val previewText = view.findViewById<TextView>(R.id.widget_preview_text)
-        val previewImage = view.findViewById<ImageView>(R.id.widget_preview_image)
-        val tag4x1 = view.findViewById<Chip>(R.id.tag_4x1)
-        val tag5x2 = view.findViewById<Chip>(R.id.tag_5x2)
-        val btnInverter = view.findViewById<MaterialButton>(R.id.btn_switch_layout)
-        val btnPin = view.findViewById<MaterialButton>(R.id.btn_pin_to_home)
-        val chipGroupSize = view.findViewById<ChipGroup>(R.id.chipGroupSize)
+        designBinding.apply {
+            btnTextPlus.setOnClickListener { viewModel.updateFontSize(true); forceAllWidgetsUpdate() }
+            btnTextMinus.setOnClickListener { viewModel.updateFontSize(false); forceAllWidgetsUpdate() }
+            btnStickerPlus.setOnClickListener { viewModel.updateStickerSize(true); forceAllWidgetsUpdate() }
+            btnStickerMinus.setOnClickListener { viewModel.updateStickerSize(false); forceAllWidgetsUpdate() }
 
-        view.findViewById<ImageView>(R.id.btn_text_plus).setOnClickListener { viewModel.updateFontSize(true); forceAllWidgetsUpdate() }
-        view.findViewById<ImageView>(R.id.btn_text_minus).setOnClickListener { viewModel.updateFontSize(false); forceAllWidgetsUpdate() }
-        view.findViewById<ImageView>(R.id.btn_sticker_plus).setOnClickListener { viewModel.updateStickerSize(true); forceAllWidgetsUpdate() }
-        view.findViewById<ImageView>(R.id.btn_sticker_minus).setOnClickListener { viewModel.updateStickerSize(false); forceAllWidgetsUpdate() }
+            btnMyWidgets.setOnClickListener { openNotesGallerySheet() }
+            btnChangeImage.setOnClickListener { openStickerPicker() }
+            btnChangeBg.setOnClickListener { openColorPicker(widgetPreviewBackground) }
+            btnChangeTextColor.setOnClickListener { openTextColorPicker() }
+            btnSwitchLayout.setOnClickListener {
+                viewModel.toggleAlignments()
+                forceAllWidgetsUpdate()
+            }
 
-        val btnMyWidgets = view.findViewById<MaterialButton>(R.id.btn_my_widgets)
-        btnMyWidgets.setOnClickListener {
-            openNotesGallerySheet()
+            chipGroupSize.setOnCheckedStateChangeListener { _, checkedIds ->
+                val newSize =
+                    if (checkedIds.contains(R.id.tag_5x2)) WidgetConstants.SIZE_5X2 else WidgetConstants.SIZE_4X1
+                if (viewModel.widgetState.value?.layoutSize != newSize) {
+                    viewModel.updateSize(newSize)
+                    forceAllWidgetsUpdate()
+                }
+            }
+
+            btnPinToHome.setOnClickListener {
+                val state = viewModel.widgetState.value ?: return@setOnClickListener
+                val providerClass =
+                    if (state.layoutSize == WidgetConstants.SIZE_5X2) WidgetProvider5x2::class.java else WidgetProvider4x1::class.java
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    requestWidgetPin(providerClass)
+                }
+            }
         }
 
         viewModel.showLimitToast.observe(this) { message ->
@@ -174,110 +183,94 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.widgetState.observe(this) { state ->
-            previewBg.setBackgroundColor(state.bgColor)
-            previewText.text = state.text
-            previewText.setTextColor(state.textColor)
-            previewText.textSize = state.fontSize
-            state.imageUri?.let { previewImage.setImageURI(it.toUri()) }
+            designBinding.apply {
+                widgetPreviewBackground.setBackgroundColor(state.bgColor)
+                widgetPreviewText.text = state.text
+                widgetPreviewText.setTextColor(state.textColor)
+                widgetPreviewText.textSize = state.fontSize
+                state.imageUri?.let { widgetPreviewImage.setImageURI(it.toUri()) }
 
-            previewBg.layoutDirection = if (state.imageAlignment == "LEFT_CENTER") View.LAYOUT_DIRECTION_RTL else View.LAYOUT_DIRECTION_LTR
+                widgetPreviewImage.scaleType = ImageView.ScaleType.FIT_CENTER
+                widgetPreviewBackground.layoutDirection = if (state.imageAlignment == "LEFT_CENTER")
+                    View.LAYOUT_DIRECTION_RTL else View.LAYOUT_DIRECTION_LTR
 
-            val imgPx = (state.stickerSize * resources.displayMetrics.density).toInt()
-            previewImage.layoutParams = (previewImage.layoutParams as LinearLayout.LayoutParams).apply {
-                width = imgPx
-                height = imgPx
-            }
+                val density = resources.displayMetrics.density
+                val imgPx = (state.stickerSize * density).toInt()
+                widgetPreviewImage.layoutParams =
+                    (widgetPreviewImage.layoutParams as LinearLayout.LayoutParams).apply {
+                        width = imgPx
+                        height = imgPx
+                    }
 
-            val is4x1 = state.layoutSize == "4x1"
-            val screenWidth = resources.displayMetrics.widthPixels
-            val density = resources.displayMetrics.density
-
-            val (widthFactor, heightDp, contentPadding) = if (is4x1) {
-                Triple(0.80, 110, 6)
-            } else {
-                Triple(0.95, 240, 16)
-            }
-
-            val paddingPx = (contentPadding * density).toInt()
-            previewBg.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
-
-            cardPreview.layoutParams = cardPreview.layoutParams.apply {
-                width = (screenWidth * widthFactor).toInt()
-                height = (heightDp * density).toInt()
-            }
-
-            cardPreview.requestLayout()
-            cardPreview.setOnClickListener {
-                openInputSheet()
-            }
-
-            tag4x1.isChecked = is4x1
-            tag5x2.isChecked = !is4x1
-
-            val appWidgetManager = AppWidgetManager.getInstance(this)
-            val info = appWidgetManager.getAppWidgetInfo(currentWidgetId)
-
-            if (info == null) {
-                btnPin.visibility = View.VISIBLE
-                btnPin.text = "Fixar nota na Home"
-            } else {
-                val isPhysical5x2 = info.provider.className.contains("WidgetProvider5x2")
-                val isPhysical4x1 = info.provider.className.contains("WidgetProvider4x1")
-
-                val sizeMismatch = (state.layoutSize == "5x2" && !isPhysical5x2) ||
-                        (state.layoutSize == "4x1" && !isPhysical4x1)
-
-                if (sizeMismatch) {
-                    btnPin.visibility = View.VISIBLE
-                    btnPin.text = "Aplicar tamanho ${state.layoutSize} na Home"
+                val is4x1 = state.layoutSize == WidgetConstants.SIZE_4X1
+                val screenWidth = resources.displayMetrics.widthPixels
+                val (widthFactor, heightDp, contentPadding) = if (is4x1) {
+                    Triple(
+                        WidgetConstants.WIDTH_FACTOR_4X1,
+                        WidgetConstants.HEIGHT_DP_4X1,
+                        WidgetConstants.PADDING_4X1
+                    )
                 } else {
-                    btnPin.visibility = View.GONE
+                    Triple(
+                        WidgetConstants.WIDTH_FACTOR_5X2,
+                        WidgetConstants.HEIGHT_DP_5X2,
+                        WidgetConstants.PADDING_5X2
+                    )
+                }
+
+                val paddingPx = (contentPadding * density).toInt()
+                widgetPreviewBackground.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+
+                cardPreview.layoutParams = cardPreview.layoutParams.apply {
+                    width = (screenWidth * widthFactor).toInt()
+                    height = (heightDp * density).toInt()
+                }
+                cardPreview.requestLayout()
+                cardPreview.setOnClickListener { openInputSheet() }
+
+                tag4x1.isChecked = is4x1
+                tag5x2.isChecked = !is4x1
+
+                val appWidgetManager = AppWidgetManager.getInstance(this@MainActivity)
+                val info = appWidgetManager.getAppWidgetInfo(currentWidgetId)
+
+                if (info == null) {
+                    btnPinToHome.visibility = View.VISIBLE
+                    btnPinToHome.text = getString(R.string.btn_pin_new)
+                } else {
+                    val isPhysical5x2 = info.provider.className.contains("WidgetProvider5x2")
+                    val isPhysical4x1 = info.provider.className.contains("WidgetProvider4x1")
+                    val sizeMismatch =
+                        (state.layoutSize == WidgetConstants.SIZE_5X2 && !isPhysical5x2) || (state.layoutSize == WidgetConstants.SIZE_4X1 && !isPhysical4x1)
+
+                    if (sizeMismatch) {
+                        btnPinToHome.visibility = View.VISIBLE
+                        btnPinToHome.text = getString(R.string.btn_pin_apply_size, state.layoutSize)
+                    } else {
+                        btnPinToHome.visibility = View.GONE
+                    }
                 }
             }
         }
-
-        chipGroupSize.setOnCheckedStateChangeListener { _, checkedIds ->
-            val newSize = if (checkedIds.contains(R.id.tag_5x2)) "5x2" else "4x1"
-            if (viewModel.widgetState.value?.layoutSize != newSize) {
-                viewModel.updateSize(newSize)
-                forceAllWidgetsUpdate()
-            }
-        }
-
-        btnPin.setOnClickListener {
-            val state = viewModel.widgetState.value ?: return@setOnClickListener
-            val providerClass = if (state.layoutSize == "5x2") WidgetProvider5x2::class.java else WidgetProvider4x1::class.java
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                requestWidgetPin(providerClass)
-            }
-        }
-
-        btnInverter.setOnClickListener {
-            viewModel.toggleAlignments()
-            forceAllWidgetsUpdate()
-        }
-        view.findViewById<Button>(R.id.btn_change_image).setOnClickListener { openStickerPicker() }
-        view.findViewById<Button>(R.id.btn_change_bg).setOnClickListener { openColorPicker(previewBg) }
-        view.findViewById<Button>(R.id.btn_change_text_color).setOnClickListener { openTextColorPicker() }
-
-        binding.fragmentContainer.addView(view)
     }
 
     private fun openNotesGallerySheet() {
         val dialog = BottomSheetDialog(this)
-        val sheetView = layoutInflater.inflate(R.layout.layout_notes_gallery_sheet, null)
-        dialog.setContentView(sheetView)
-
-        val rvGrid = sheetView.findViewById<RecyclerView>(R.id.rv_gallery_grid)
+        val sheetBinding =
+            com.example.stickynotes.databinding.LayoutNotesGallerySheetBinding.inflate(
+                layoutInflater
+            )
+        dialog.setContentView(sheetBinding.root)
 
         sheetGalleryAdapter = WidgetGalleryAdapter(
-            items = emptyList(),
             onItemClick = { selectedNote ->
                 viewModel.loadData(selectedNote.id)
                 currentWidgetId = selectedNote.id
-                val mainScroll = binding.fragmentContainer.findViewById<android.widget.ScrollView>(R.id.mainScrollView)
+
+                val mainScroll =
+                    binding.fragmentContainer.findViewById<android.widget.ScrollView>(R.id.mainScrollView)
                 mainScroll?.smoothScrollTo(0, 0)
+
                 dialog.dismiss()
             },
             onDeleteClick = { noteToDelete ->
@@ -285,7 +278,7 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        rvGrid.apply {
+        sheetBinding.rvGalleryGrid.apply {
             layoutManager = GridLayoutManager(this@MainActivity, 2)
             adapter = sheetGalleryAdapter
         }
@@ -302,13 +295,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDeleteConfirmation(note: WidgetNote) {
         AlertDialog.Builder(this)
-            .setTitle("Excluir Dados?")
-            .setMessage("Isso apagará o conteúdo salvo. Para remover o widget da tela inicial, você deve arrastá-lo para a lixeira do seu celular.")
-            .setPositiveButton("Excluir") { _, _ ->
+            .setTitle(getString(R.string.dialog_delete_title))
+            .setMessage(getString(R.string.dialog_delete_message))
+            .setPositiveButton(getString(R.string.action_delete)) { _, _ ->
                 viewModel.deleteWidget(note.id)
                 forceAllWidgetsUpdate()
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.action_cancel), null)
             .show()
     }
 
@@ -322,42 +315,59 @@ class MainActivity : AppCompatActivity() {
 
     private fun openInputSheet() {
         val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.layout_input_bottom_sheet, null)
-        dialog.setContentView(view)
+        val inputBinding =
+            com.example.stickynotes.databinding.LayoutInputBottomSheetBinding.inflate(layoutInflater)
+        dialog.setContentView(inputBinding.root)
 
-        val etText = view.findViewById<EditText>(R.id.et_widget_text)
-        val btnSave = view.findViewById<Button>(R.id.btn_save)
-        val btnClear = view.findViewById<Button>(R.id.btn_clear)
-        val btnClose = view.findViewById<Button>(R.id.btn_close)
+        inputBinding.etWidgetText.setText(viewModel.widgetState.value?.text ?: "")
 
-        etText.setText(viewModel.widgetState.value?.text ?: "")
+        inputBinding.apply {
+            btnSave.setOnClickListener {
+                val newText = etWidgetText.text.toString()
+                viewModel.updateText(newText)
+                forceAllWidgetsUpdate()
+                dialog.dismiss()
+            }
 
-        btnSave.setOnClickListener {
-            viewModel.updateText(etText.text.toString())
-            forceAllWidgetsUpdate()
-            dialog.dismiss()
-        }
+            btnClear.setOnClickListener {
+                etWidgetText.setText("")
+            }
 
-        btnClear.setOnClickListener {
-            etText.setText("")
-        }
-
-        btnClose.setOnClickListener {
-            dialog.dismiss()
+            btnClose.setOnClickListener {
+                dialog.dismiss()
+            }
         }
 
         dialog.show()
     }
-    private fun openFormatDialog() {
-        val view = layoutInflater.inflate(R.layout.dialog_widget_size, null)
-        val alert = AlertDialog.Builder(this).setView(view).create()
 
-        view.findViewById<View>(R.id.card_widget_4x1).setOnClickListener {
-            confirmWidgetSelection("4x1", WidgetProvider4x1::class.java, alert)
+    private fun openFormatDialog() {
+
+        val dialogBinding =
+            com.example.stickynotes.databinding.DialogWidgetSizeBinding.inflate(layoutInflater)
+
+        val alert = AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .create()
+
+        dialogBinding.apply {
+            cardWidget4x1.setOnClickListener {
+                confirmWidgetSelection(
+                    WidgetConstants.SIZE_4X1,
+                    WidgetProvider4x1::class.java,
+                    alert
+                )
+            }
+
+            cardWidget5x2.setOnClickListener {
+                confirmWidgetSelection(
+                    WidgetConstants.SIZE_5X2,
+                    WidgetProvider5x2::class.java,
+                    alert
+                )
+            }
         }
-        view.findViewById<View>(R.id.card_widget_5x2).setOnClickListener {
-            confirmWidgetSelection("5x2", WidgetProvider5x2::class.java, alert)
-        }
+
         alert.show()
     }
 
@@ -444,9 +454,13 @@ class MainActivity : AppCompatActivity() {
 
         val currentNote = viewModel.widgetState.value ?: return
 
-        val layoutRes = if (currentNote.layoutSize == "5x2") R.layout.widget_sticky_5x2 else R.layout.widget_sticky_4x1
-        val preview = RemoteViews(packageName, layoutRes).apply {
+        val layoutRes = if (currentNote.layoutSize == WidgetConstants.SIZE_5X2) {
+            R.layout.widget_sticky_5x2
+        } else {
+            R.layout.widget_sticky_4x1
+        }
 
+        val preview = RemoteViews(packageName, layoutRes).apply {
             setTextViewText(R.id.widget_text_display, currentNote.text)
             setInt(R.id.widget_background_display, "setBackgroundColor", currentNote.bgColor)
             setTextColor(R.id.widget_text_display, currentNote.textColor)
@@ -461,7 +475,9 @@ class MainActivity : AppCompatActivity() {
                     val px = (currentNote.stickerSize * density).toInt()
                     val bmp = uriToBitmap(this@MainActivity, uriStr.toUri(), px)
                     bmp?.let { setImageViewBitmap(R.id.widget_image_display, it) }
-                } catch (_: Exception) { }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
 
@@ -486,46 +502,53 @@ class MainActivity : AppCompatActivity() {
 
     private fun openStickerPicker() {
         val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.layout_sticker_picker, null)
-        dialog.setContentView(view)
-
-        val rv = view.findViewById<RecyclerView>(R.id.rv_stickers)
-        val title = view.findViewById<TextView>(R.id.tv_picker_title)
+        val pickerBinding =
+            com.example.stickynotes.databinding.LayoutStickerPickerBinding.inflate(layoutInflater)
+        dialog.setContentView(pickerBinding.root)
 
         val stickerSource = StickerDataSource(this)
         val myCollections = stickerSource.getCollections()
-
         val allThumbIds = myCollections.map { it.thumbnailRes }
 
-        var stickerAdapter: StickerAdapter? = null
-
-        stickerAdapter = StickerAdapter(
-            items = allThumbIds,
-            thumbIds = allThumbIds
-        ) { selectedRes ->
-
+        val stickerAdapter = StickerAdapter(thumbIds = allThumbIds) { selectedRes ->
             val clickedCollection = myCollections.find { it.thumbnailRes == selectedRes }
 
-            if (clickedCollection != null) {
-                title.text = "← ${clickedCollection.name}"
-                title.setTextColor(ContextCompat.getColor(this, R.color.sticky_text))
+            pickerBinding.apply {
+                if (clickedCollection != null) {
+                    tvPickerTitle.text =
+                        getString(R.string.picker_title_collection, clickedCollection.name)
+                    tvPickerTitle.setTextColor(
+                        ContextCompat.getColor(
+                            this@MainActivity,
+                            R.color.sticky_text
+                        )
+                    )
 
-                stickerAdapter?.updateData(clickedCollection.stickers)
+                    (rvStickers.adapter as? StickerAdapter)?.updateData(clickedCollection.stickers)
 
-                title.setOnClickListener {
-                    title.text = "Escolha uma Coleção"
-                    title.setTextColor(ContextCompat.getColor(this, R.color.sticky_text))
-                    stickerAdapter?.updateData(allThumbIds)
-                    title.setOnClickListener(null)
+                    tvPickerTitle.setOnClickListener {
+                        tvPickerTitle.text = getString(R.string.picker_title_default)
+                        tvPickerTitle.setTextColor(
+                            ContextCompat.getColor(
+                                this@MainActivity,
+                                R.color.sticky_text
+                            )
+                        )
+                        (rvStickers.adapter as? StickerAdapter)?.updateData(allThumbIds)
+                        tvPickerTitle.setOnClickListener(null)
+                    }
+                } else {
+                    saveStickerAndClose(selectedRes, dialog)
                 }
-            } else {
-                saveStickerAndClose(selectedRes, dialog)
             }
         }
 
-        rv.layoutManager = GridLayoutManager(this, 3)
-        rv.adapter = stickerAdapter
+        pickerBinding.rvStickers.apply {
+            layoutManager = GridLayoutManager(this@MainActivity, 3)
+            adapter = stickerAdapter
+        }
 
+        stickerAdapter.updateData(allThumbIds)
         dialog.show()
     }
 

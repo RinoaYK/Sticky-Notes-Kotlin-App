@@ -17,7 +17,7 @@
             android:id="@+id/tv_greeting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vamos criar um widget hoje?"
+            android:text="@string/hub_greeting"
             android:textColor="@color/sticky_text"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -26,44 +26,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Gerencie suas notas ou crie uma nova abaixo"
-            android:textColor="@color/sticky_text"
             android:alpha="0.7"
+            android:text="@string/hub_subtitle"
+            android:textColor="@color/sticky_text"
             android:textSize="14sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_hub_create_new"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/desc_btn_create_new"
+            android:elevation="4dp"
             android:minHeight="48dp"
-            android:text="Criar Novo Widget"
+            android:text="@string/hub_btn_create"
             android:textAllCaps="false"
+            android:textColor="@color/sticky_text"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:backgroundTint="@color/sticky_yellow"
             app:cornerRadius="16dp"
             app:icon="@drawable/ic_plus"
             app:iconGravity="textStart"
             app:iconPadding="8dp"
-            app:iconSize="20dp"
-            app:backgroundTint="@color/sticky_yellow"
-            android:textColor="@color/sticky_text"
-            android:elevation="4dp"/>
+            app:iconSize="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="12dp"
-            android:text="Suas Notas Ativas"
+            android:text="@string/hub_title_active_notes"
             android:textColor="@color/sticky_text"
-            android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_hub_gallery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
+            android:contentDescription="@string/desc_rv_notes"
             android:minHeight="120dp"
             android:paddingBottom="20dp" />
 
@@ -71,10 +73,10 @@
             android:id="@+id/tv_empty_state"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:alpha="0.5"
             android:gravity="center"
-            android:text="Nenhuma nota ativa na Home.\nToque em 'Criar Novo' para começar!"
-            android:visibility="gone"
-            android:alpha="0.5" />
+            android:text="@string/hub_empty_state"
+            android:visibility="gone" />
 
     </LinearLayout>
 </ScrollView>

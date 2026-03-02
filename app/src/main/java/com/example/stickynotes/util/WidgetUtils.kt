@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.core.graphics.scale
+import com.example.stickynotes.R
 
 fun uriToBitmap(context: Context, uri: Uri, targetSizePx: Int): Bitmap? {
     return try {
@@ -28,12 +29,14 @@ fun uriToBitmap(context: Context, uri: Uri, targetSizePx: Int): Bitmap? {
     }
 }
 
-fun getGreeting(): String {
+fun getGreeting(context: Context): String {
     val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
 
-    return when (hour) {
-        in 5..12 -> "Bom dia! ☀️\nVamos criar um widget?"
-        in 13..18 -> "Boa tarde! ☁️\nVamos criar um widget?"
-        else -> "Boa noite! 🌙\nVamos criar um widget?"
+    val stringRes = when (hour) {
+        in 5..11 -> R.string.greeting_morning
+        in 12..18 -> R.string.greeting_afternoon
+        else -> R.string.greeting_night
     }
+
+    return context.getString(stringRes)
 }
