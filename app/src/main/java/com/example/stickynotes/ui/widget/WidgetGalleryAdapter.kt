@@ -3,67 +3,70 @@ package com.example.stickynotes.ui.widget
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.net.toUri
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.stickynotes.R
+import com.example.stickynotes.databinding.ItemWidgetGalleryBinding
 import com.example.stickynotes.domain.model.WidgetNote
 
 class WidgetGalleryAdapter(
-    private var items: List<WidgetNote>,
     private val onItemClick: (WidgetNote) -> Unit,
     private val onDeleteClick: (WidgetNote) -> Unit
-) : RecyclerView.Adapter<WidgetGalleryAdapter.ViewHolder>() {
+) : ListAdapter<WidgetNote, WidgetGalleryAdapter.ViewHolder>(WidgetNoteDiffCallback) {
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val background: LinearLayout = view.findViewById(R.id.item_background)
-        val text: TextView = view.findViewById(R.id.item_text)
-        val sticker: ImageView = view.findViewById(R.id.item_sticker)
-        val btnDelete: ImageButton = view.findViewById(R.id.btn_delete_note)
+    inner class ViewHolder(private val binding: ItemWidgetGalleryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(note: WidgetNote) {
-            background.setBackgroundColor(note.bgColor)
-            text.text = note.text
-            text.setTextColor(note.textColor)
+            binding.apply {
+                itemBackground.setBackgroundColor(note.bgColor)
+                itemText.text = note.text
+                itemText.setTextColor(note.textColor)
 
-            note.imageUri?.let {
-                sticker.setImageURI(it.toUri())
-                sticker.visibility = View.VISIBLE
-            } ?: run {
-                sticker.visibility = View.GONE
-            }
+                note.imageUri?.let { uriString ->
+                    itemSticker.setImageURI(uriString.toUri())
+                    itemSticker.visibility = View.VISIBLE
+                } ?: run {
+                    itemSticker.visibility = View.GONE
+                }
 
-            background.layoutDirection = if (note.imageAlignment == "LEFT_CENTER") {
-                View.LAYOUT_DIRECTION_RTL
-            } else {
-                View.LAYOUT_DIRECTION_LTR
-            }
+                itemBackground.layoutDirection = if (note.imageAlignment == "LEFT_CENTER") {
+                    View.LAYOUT_DIRECTION_RTL
+                } else {
+                    View.LAYOUT_DIRECTION_LTR
+                }
 
-            itemView.setOnClickListener { onItemClick(note) }
-
-            btnDelete.setOnClickListener {
-                onDeleteClick(note)
+                root.setOnClickListener { onItemClick(note) }
+                btnDeleteNote.setOnClickListener { onDeleteClick(note) }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_widget_gallery, parent, false)
-        return ViewHolder(view)
+        val binding = ItemWidgetGalleryBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount() = items.size
+    fun updateData(newItems: List<WidgetNote>?) {
+        submitList(newItems)
+    }
 
-    fun updateData(newItems: List<WidgetNote>) {
-        this.items = newItems
-        notifyDataSetChanged()
+    object WidgetNoteDiffCallback : DiffUtil.ItemCallback<WidgetNote>() {
+        override fun areItemsTheSame(oldItem: WidgetNote, newItem: WidgetNote): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: WidgetNote, newItem: WidgetNote): Boolean {
+            return oldItem == newItem
+        }
     }
 }

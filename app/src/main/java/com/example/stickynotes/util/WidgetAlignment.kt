@@ -1,4 +1,4 @@
-package com.example.stickynotes.ui.widget
+package com.example.stickynotes.util
 
 import android.view.Gravity
 

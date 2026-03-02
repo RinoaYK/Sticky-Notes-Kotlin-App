@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Pré-visualização do Widget"
+            android:text="@string/design_title_preview"
             android:textColor="@color/sticky_text"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -26,10 +26,11 @@
             android:id="@+id/card_preview"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:layout_gravity="center"
             android:layout_marginBottom="24dp"
             android:clickable="true"
+            android:contentDescription="@string/desc_preview_card"
             android:focusable="true"
-            android:layout_gravity="center"
             app:cardBackgroundColor="@color/sticky_yellow"
             app:cardCornerRadius="20dp"
             app:cardElevation="6dp">
@@ -38,15 +39,17 @@
                 android:id="@+id/widget_preview_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:baselineAligned="false"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="8dp">
 
                 <ImageView
                     android:id="@+id/widget_preview_image"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:scaleType="centerInside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/desc_preview_sticker"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_design" />
 
                 <TextView
@@ -57,7 +60,7 @@
                     android:ellipsize="end"
                     android:maxLines="6"
                     android:padding="8dp"
-                    android:text="Seu texto aqui!"
+                    android:text="@string/design_default_preview_text"
                     android:textColor="@color/sticky_text"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -67,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Configurações de Layout"
+            android:text="@string/design_title_layout"
             android:textColor="@color/sticky_text"
             android:textStyle="bold" />
 
@@ -75,6 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:baselineAligned="false"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -84,7 +88,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Posição"
+                android:text="@string/design_btn_position"
                 android:textColor="@color/sticky_text"
                 app:icon="@drawable/ic_sync_animated"
                 app:iconPadding="6dp"
@@ -105,7 +109,8 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4x1"
+                    android:contentDescription="@string/desc_chip_4x1"
+                    android:text="@string/chip_4x1"
                     android:textColor="@color/chip_text_color"
                     app:chipBackgroundColor="@color/chip_4x1_selector" />
 
@@ -114,7 +119,8 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5x2"
+                    android:contentDescription="@string/desc_chip_5x2"
+                    android:text="@string/chip_5x2"
                     android:textColor="@color/chip_text_color"
                     app:chipBackgroundColor="@color/chip_5x2_selector" />
             </com.google.android.material.chip.ChipGroup>
@@ -126,32 +132,38 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:backgroundTint="@color/sticky_yellow"
-            android:text="Escolher Sticker"
+            android:text="@string/design_btn_choose_sticker"
             android:textColor="@color/sticky_text" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="Ajustar tamanho do Sticker"
+                android:text="@string/design_label_sticker_size"
                 android:textColor="@color/sticky_text" />
+
             <ImageView
                 android:id="@+id/btn_sticker_minus"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:contentDescription="@string/desc_btn_decrease"
                 android:padding="6dp"
                 android:src="@drawable/ic_minus"
                 app:tint="@color/sticky_yellow" />
+
             <ImageView
                 android:id="@+id/btn_sticker_plus"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:contentDescription="@string/desc_btn_increase"
                 android:padding="6dp"
                 android:src="@drawable/ic_plus"
                 app:tint="@color/sticky_yellow" />
@@ -163,7 +175,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text="Mudar Cor de Fundo"
+            android:text="@string/design_btn_change_bg"
             app:strokeColor="@color/sticky_yellow_variant" />
 
         <com.google.android.material.button.MaterialButton
@@ -172,31 +184,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text="Mudar Cor do Texto"
+            android:text="@string/design_btn_change_text_color"
             app:strokeColor="@color/sticky_yellow_variant" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="Ajustar tamanho da fonte" />
+                android:text="@string/design_label_font_size" />
+
             <ImageView
                 android:id="@+id/btn_text_minus"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:contentDescription="@string/desc_btn_decrease"
                 android:padding="6dp"
                 android:src="@drawable/ic_minus"
                 app:tint="@color/sticky_yellow" />
+
             <ImageView
                 android:id="@+id/btn_text_plus"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:contentDescription="@string/desc_btn_increase"
                 android:padding="6dp"
                 android:src="@drawable/ic_plus"
                 app:tint="@color/sticky_yellow" />
@@ -207,7 +225,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="12dp"
-            android:text="Gerenciar Widgets"
+            android:text="@string/design_title_manage"
             android:textColor="@color/sticky_text"
             android:textStyle="bold" />
 
@@ -216,14 +234,13 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Salvar/Fixar esta nota na Home"
+            android:text="@string/design_btn_pin"
+            android:textColor="@color/sticky_text"
             app:icon="@drawable/ic_plus"
             app:iconGravity="textStart"
-            app:iconSize="20dp"
             app:iconPadding="16dp"
-            app:strokeColor="@color/sticky_yellow"
-            android:textColor="@color/sticky_text"
-             />
+            app:iconSize="20dp"
+            app:strokeColor="@color/sticky_yellow" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -236,13 +253,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Minhas notas"
+                android:text="@string/design_btn_my_notes"
                 android:textColor="@color/sticky_text"
+                app:backgroundTint="@color/sticky_yellow"
                 app:icon="@drawable/ic_design"
                 app:iconGravity="textStart"
-                app:iconSize="20dp"
                 app:iconPadding="16dp"
-                app:backgroundTint="@color/sticky_yellow"/>
+                app:iconSize="20dp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -250,8 +267,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:paddingBottom="20dp"
             android:orientation="horizontal"
+            android:paddingBottom="20dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>

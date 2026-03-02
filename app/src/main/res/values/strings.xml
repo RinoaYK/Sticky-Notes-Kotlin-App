@@ -1,3 +1,102 @@
 <resources>
     <string name="app_name">Sticky Notes</string>
+    <string name="title_collection_takopi">Takopi</string>
+    <string name="title_collection_mitao_cat">Mitao Cat</string>
+    <string name="title_collection_bugcat">Bugcat</string>
+    <string name="title_collection_kapibara_san">Kapibara-san</string>
+    <string name="title_collection_cult_of_lamb">Cult of Lamb</string>
+    <string name="title_collection_exploding_kittens">Exploding Kittens</string>
+
+    <string name="greeting_morning">Bom dia! ☀️\nVamos criar um widget?</string>
+    <string name="greeting_afternoon">Boa tarde! ☁️\nVamos criar um widget?</string>
+    <string name="greeting_night">Boa noite! 🌙\nVamos criar um widget?</string>
+
+    <string name="widget_empty_state">Toque para configurar sua nota</string>
+    <string name="toast_select_note">Escolha uma nota na galeria para editar!</string>
+    <string name="toast_select_widget">Selecione um widget primeiro!</string>
+
+    <string name="default_note_text">Sua nota...</string>
+    <string name="toast_font_max">Tamanho máximo da fonte atingido</string>
+    <string name="toast_font_min">Tamanho mínimo da fonte atingido</string>
+    <string name="toast_sticker_max">O Sticker não pode ser maior neste layout</string>
+    <string name="toast_sticker_min">Tamanho mínimo do sticker atingido</string>
+
+    <string name="btn_pin_new">Fixar nota na Home</string>
+    <string name="btn_pin_apply_size">Aplicar tamanho %1$s na Home</string>
+
+    <string name="dialog_delete_title">Excluir Dados?</string>
+    <string name="dialog_delete_message">Isso apagará o conteúdo salvo. Para remover o widget da tela inicial, você deve arrastá-lo para a lixeira do seu celular.</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_cancel">Cancelar</string>
+
+    <string name="picker_title_default">Escolha uma Coleção</string>
+    <string name="picker_title_collection">← %1$s</string>
+
+    <string name="nav_home">Início</string>
+    <string name="nav_input">Texto</string>
+    <string name="nav_design">Design</string>
+    <string name="desc_nav_home">Ir para a tela inicial</string>
+    <string name="desc_nav_input">Abrir edição de texto</string>
+    <string name="desc_nav_design">Personalizar aparência da nota</string>
+
+    <string name="dialog_choose_format">Escolha o formato do Widget</string>
+    <string name="widget_label_4x1">Widget (4x1)</string>
+    <string name="widget_label_5x2">Widget (5x2)</string>
+    <string name="desc_format_4x1">Formato de widget pequeno, quatro por um</string>
+    <string name="desc_format_5x2">Formato de widget grande, cinco por dois</string>
+
+    <string name="desc_sticker_item">Imagem do sticker ou coleção</string>
+
+    <string name="desc_note_sticker">Miniatura do sticker na nota</string>
+    <string name="desc_delete_note">Excluir esta nota permanentemente</string>
+
+    <string name="hub_greeting">Vamos criar um widget hoje?</string>
+    <string name="hub_subtitle">Gerencie suas notas ou crie uma nova abaixo</string>
+    <string name="hub_btn_create">Criar Novo Widget</string>
+    <string name="hub_title_active_notes">Suas Notas Ativas</string>
+    <string name="hub_empty_state">Nenhuma nota ativa na Home.\nToque em \'Criar Novo\' para começar!</string>
+    <string name="desc_btn_create_new">Botão para abrir o diálogo de escolha de tamanho e criar uma nova nota</string>
+    <string name="desc_rv_notes">Lista de notas adesivas já criadas por você</string>
+
+    <string name="sheet_edit_title">Editar Nota</string>
+    <string name="sheet_edit_hint">Digite o texto do seu widget…</string>
+    <string name="action_clear">Limpar</string>
+    <string name="action_close">Fechar</string>
+    <string name="action_save">Salvar</string>
+    <string name="desc_handle_bar">Barra de arraste para fechar o painel</string>
+    <string name="desc_btn_clear">Limpar todo o texto digitado</string>
+    <string name="desc_btn_close_sheet">Fechar editor sem salvar alterações</string>
+    <string name="desc_btn_save_note">Salvar texto e atualizar widget</string>
+
+    <string name="gallery_sheet_title">Minhas Notas</string>
+    <string name="desc_gallery_handle">Barra de arraste do painel de notas</string>
+    <string name="desc_gallery_list">Lista contendo todas as suas notas salvas</string>
+
+    <string name="desc_sticker_grid">Grade de seleção de stickers e coleções</string>
+
+    <string name="widget_default_text">Sua Nota</string>
+    <string name="desc_widget_sticker">Sticker decorativo da nota</string>
+    <string name="desc_widget_root">Nota adesiva do Sticky Notes</string>
+
+    <string name="design_title_preview">Pré-visualização do Widget</string>
+    <string name="design_default_preview_text">Seu texto aqui!</string>
+    <string name="design_title_layout">Configurações de Layout</string>
+    <string name="design_btn_position">Posição</string>
+    <string name="design_btn_choose_sticker">Escolher Sticker</string>
+    <string name="design_label_sticker_size">Ajustar tamanho do Sticker</string>
+    <string name="design_btn_change_bg">Mudar Cor de Fundo</string>
+    <string name="design_btn_change_text_color">Mudar Cor do Texto</string>
+    <string name="design_label_font_size">Ajustar tamanho da fonte</string>
+    <string name="design_title_manage">Gerenciar Widgets</string>
+    <string name="design_btn_pin">Salvar/Fixar esta nota na Home</string>
+    <string name="design_btn_my_notes">Minhas notas</string>
+    <string name="desc_preview_card">Prévia de como a nota aparecerá na sua tela inicial</string>
+    <string name="desc_preview_sticker">Sticker selecionado para a nota</string>
+    <string name="desc_btn_increase">Aumentar tamanho</string>
+    <string name="desc_btn_decrease">Diminuir tamanho</string>
+    <string name="desc_chip_4x1">Tamanho pequeno, quatro por um</string>
+    <string name="desc_chip_5x2">Tamanho grande, cinco por dois</string>
+    <string name="chip_4x1">4x1</string>
+    <string name="chip_5x2">5x2</string>
+
 </resources>
