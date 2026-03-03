@@ -99,4 +99,6 @@
     <string name="chip_4x1">4x1</string>
     <string name="chip_5x2">5x2</string>
 
+    <string name="toast_widget_pinned">Widget fixado com sucesso!</string>
+
 </resources>

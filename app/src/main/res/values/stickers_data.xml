@@ -73,6 +73,7 @@
         <item>@drawable/sticker_bugcat_17</item>
         <item>@drawable/sticker_bugcat_18</item>
         <item>@drawable/sticker_bugcat_19</item>
+        <item>@drawable/sticker_bugcat_20</item>
         <item>@drawable/sticker_bugcat_21</item>
         <item>@drawable/sticker_bugcat_22</item>
         <item>@drawable/sticker_bugcat_23</item>
@@ -145,7 +146,6 @@
         <item>@drawable/sticker_bugcat_90</item>
         <item>@drawable/sticker_bugcat_91</item>
         <item>@drawable/sticker_bugcat_92</item>
-        <item>@drawable/sticker_bugcat_93</item>
     </array>
 
     <array name="array_sticker_exploding_kittens">

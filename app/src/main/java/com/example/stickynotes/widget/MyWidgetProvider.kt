@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.room.Room
 import com.example.stickynotes.R
@@ -114,6 +115,8 @@ open class MyWidgetProvider : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
         if (intent?.action == "ACTION_WIDGET_PINNED") {
+            Toast.makeText(context, context.getString(R.string.toast_widget_pinned), Toast.LENGTH_SHORT).show()
+
             val newWidgetId = intent.getIntExtra(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID

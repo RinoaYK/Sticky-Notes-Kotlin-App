@@ -17,11 +17,8 @@ Crie lembretes visuais incríveis com cores vibrantes, widgets dinâmicos e uma 
   - 🐛 Bugcat Capoo  
   - ฅ^._.^ฅ💣 Exploding Kittens  
   - ₍ᐢ- ̫ -ᐢ₎ Kapibara San
-  - 🐑 Cult of the Lamb
-    
-
-  > **Destaque:** Apenas a coleção Bugcat Capoo já conta com **+93 stickers**!
-
+  - 🐑 Cult of the Lamb  
+  
 - **Widgets Inteligentes**  
   Formatos 4×1 e 5×2 com atualização em tempo real e suporte a múltiplos widgets simultâneos.
 
